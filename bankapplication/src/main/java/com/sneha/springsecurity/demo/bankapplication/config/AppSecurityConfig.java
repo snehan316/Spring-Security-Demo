@@ -19,4 +19,26 @@ public class AppSecurityConfig {
 		
 		return http.build();
 	}
+	
+    /*
+     *  Below code will permit all the requests without authentication - Not recommended for production
+	/*    http.authorizeHttpRequests().anyRequest().permitAll()
+		.and().formLogin()
+		.and().httpBasic();
+		
+		return http.build(); 
+	*/
+	
+	 /*
+     *  Below code will deny all the requests without authentication  - Not recommended for production
+	 */	
+		
+	/*    http.authorizeHttpRequests().anyRequest().denyAll()
+		.and().formLogin()
+		.and().httpBasic();
+		
+		return http.build(); 
+	*/
+	
+	
 }
