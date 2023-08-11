@@ -1,5 +1,6 @@
 package com.sneha.springsecurity.demo.bankapplication.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import javax.sql.DataSource;
@@ -29,7 +30,7 @@ public class AppSecurityConfig {
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		
-		http.securityContext().requireExplicitSave(false).and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.cors().configurationSource(new CorsConfigurationSource() {
 			
 			@Override
@@ -40,6 +41,7 @@ public class AppSecurityConfig {
 				config.setAllowCredentials(true);
 				config.setAllowedHeaders(Collections.singletonList("*"));
 				config.setMaxAge(3600L);
+				config.setExposedHeaders(Arrays.asList("Authorization"));
 				return config;
 			}
 		})
