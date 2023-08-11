@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import com.sneha.springsecurity.demo.bankapplication.config.custom.BankAppAuthorityLoggingFilter;
 
 @Configuration
 public class AppSecurityConfig {
@@ -18,8 +21,17 @@ public class AppSecurityConfig {
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		
-		http.csrf().disable().authorizeHttpRequests()
-		.requestMatchers("/accounts","/cards","/loans","/balance","/customers").authenticated()
+		http.csrf().disable().addFilterAfter(new BankAppAuthorityLoggingFilter(), BasicAuthenticationFilter.class)
+		.authorizeHttpRequests()
+//		.requestMatchers("/accounts").hasAuthority("VIEWACCOUNT")
+//		.requestMatchers("/balance").hasAuthority("VIEWBALANCE")
+//		.requestMatchers("/cards").hasAuthority("VIEWCARDS")
+//		.requestMatchers("/loans").hasAuthority("VIEWLOAN")
+		.requestMatchers("/accounts").hasRole("USER")
+		.requestMatchers("/balance").hasAnyRole("USER","ADMIN")
+		.requestMatchers("/cards").hasRole("USER")
+		.requestMatchers("/loans").hasRole("USER")
+		.requestMatchers("/customers").authenticated()
 		.requestMatchers("/contact","/notices","/register").permitAll()
 		.and().formLogin()
 		.and().httpBasic();
